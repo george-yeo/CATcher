@@ -288,12 +288,24 @@
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="this.headers"></mat-header-row>>
-  <mat-row
-    *matRowDef="let issue; columns: this.headers"
-    (click)="this.logIssueEditRouting(issue.id)"
-    [routerLink]="'issues/' + issue.id"
-    style="cursor: pointer"
-  ></mat-row>
+  <div class="issue-row-wrapper" *matRowDef="let issue; columns: this.headers">
+    <mat-row
+      (click)="this.logIssueEditRouting(issue.id)"
+      [routerLink]="'issues/' + issue.id"
+      style="cursor: pointer"
+      (mouseenter)="showTooltip($event, issue)"
+      (mouseleave)="hideTooltip()"
+    >
+    </mat-row>
+
+    <app-issue-tooltip
+      *ngIf="hoveredIssue === issue"
+      [issue]="issue"
+      [lastComment]="'test'"
+      [class.tooltip-above]="this.tooltipDirection === 'above'"
+    >
+    </app-issue-tooltip>
+  </div>
 </mat-table>
 <mat-card *ngIf="this.issues.isLoading$ | async" style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner color="primary" mode="indeterminate" diameter="50" strokeWidth="5"></mat-progress-spinner>
