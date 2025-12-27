@@ -79,3 +79,22 @@
 .title-wrap {
   overflow-wrap: anywhere;
 }
+
+.issue-row-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+app-issue-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  margin-top: 4px;
+}
+
+app-issue-tooltip.tooltip-above {
+  top: -4px;
+  transform: translateY(-100%);
+  margin-top: 0px;
+}

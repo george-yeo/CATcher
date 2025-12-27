@@ -34,6 +34,7 @@ export enum ACTION_BUTTONS {
 })
 export class IssueTablesComponent implements OnInit, AfterViewInit {
   snackBarAutoCloseTime = 3000;
+  tooltipMaxHeight = 200;
 
   @Input() headers: string[];
   @Input() actions: ACTION_BUTTONS[];
@@ -46,6 +47,8 @@ export class IssueTablesComponent implements OnInit, AfterViewInit {
   issues: IssuesDataTable;
   issuesPendingDeletion: { [id: number]: boolean };
   issuesPendingRestore: { [id: number]: boolean };
+  hoveredIssue: Issue | null = null;
+  tooltipDirection: 'above' | 'below' = 'below';
 
   public tableSettings: TableSettings;
 
@@ -222,5 +225,23 @@ export class IssueTablesComponent implements OnInit, AfterViewInit {
         (error) => this.errorHandlingService.handleError(error)
       );
     event.stopPropagation();
+  }
+
+  showTooltip(event: any, issue: Issue) {
+    this.hoveredIssue = issue;
+
+    const rowElement = (event.target as HTMLElement).closest('.issue-row-wrapper') as HTMLElement;
+    const spaceBelow = window.innerHeight - rowElement.getBoundingClientRect().bottom;
+    console.log(spaceBelow, this.tooltipMaxHeight);
+    this.tooltipDirection = spaceBelow >= this.tooltipMaxHeight ? 'below' : 'above';
+  }
+
+  hideTooltip() {
+    this.hoveredIssue = null;
+  }
+
+  getLastComment(issue: Issue): string {
+    const comments = issue.githubComments || [];
+    return comments.length > 0 ? comments[comments.length - 1].body : '';
   }
 }
